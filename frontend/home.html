@@ -1,0 +1,181 @@
+<!-- home.html — Colorful animated landing page -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>AI Predicta — Fair, Explainable Recruiting</title>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body class="bg-animated">
+  <!-- Dynamic particle canvas -->
+  <canvas id="bgParticles" class="bg-canvas" aria-hidden="true"></canvas>
+
+  <header class="site-header">
+    <a class="brand" href="home.html">
+      <span class="logo-badge">AI</span>
+      <span class="brand-text">Predicta</span>
+    </a>
+    <nav class="site-nav">
+      <a href="#features">Features</a>
+      <a href="#how">How it works</a>
+      <a href="#ethics">Fairness</a>
+      <a href="#faq">FAQ</a>
+      <a class="btn ghost" href="login.html">Login</a>
+      <a class="btn primary" href="signup.html">Get Started</a>
+    </nav>
+  </header>
+
+  <!-- HERO -->
+  <section class="hero container">
+    <div class="hero-copy">
+      <p class="pill neon">Fair • Explainable • Fast</p>
+      <h1 class="grad-title">
+        Hire smarter with <span class="stroke">AI</span> that you can <em>trust</em>
+      </h1>
+      <p class="sub">
+        Paste your Job Description, upload resumes, and get a ranked, <strong>explainable</strong> shortlist—complete with
+        <strong>skill overlap</strong>, <strong>semantic similarity</strong>, and an optional <strong>PII anonymization</strong> step.
+      </p>
+      <div class="cta-row">
+        <a class="btn xl primary" href="signup.html">Create your free account</a>
+        <a class="btn xl ghost" href="index.html">Try the dashboard</a>
+      </div>
+      <ul class="hero-kpis">
+        <li><strong>10x</strong> faster shortlisting</li>
+        <li><strong>Explainable</strong> scoring</li>
+        <li><strong>Bias‑aware</strong> workflow</li>
+      </ul>
+    </div>
+    <div class="hero-art">
+      <div class="blob blob-1"></div>
+      <div class="blob blob-2"></div>
+      <div class="blob blob-3"></div>
+      <div class="glass-card float" data-parallax>
+        <h3>Top Match: 92.4%</h3>
+        <div class="bar"><span style="width:92%"></span></div>
+        <div class="kv">
+          <span class="pill">Python</span>
+          <span class="pill">Sentence‑BERT</span>
+          <span class="pill">Django</span>
+          <span class="pill">XGBoost</span>
+        </div>
+        <button class="btn ghost sm">Explain</button>
+      </div>
+      <div class="glass-card small float delay" data-parallax>
+        <h4>Fairness</h4>
+        <p class="muted">PII anonymization is <strong>ON</strong></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- FEATURES -->
+  <section id="features" class="section container">
+    <h2 class="section-title">Everything recruiters need — nothing they don’t</h2>
+    <div class="grid three reveal">
+      <article class="card feature">
+        <div class="icon">⚡</div>
+        <h3>Semantic ranking</h3>
+        <p>Turn JDs and resumes into vectors and compute <em>context‑aware</em> match scores, not keyword noise.</p>
+      </article>
+      <article class="card feature">
+        <div class="icon">🧠</div>
+        <h3>Explainability</h3>
+        <p>See <strong>skill overlap</strong>, top contributing terms, and what’s missing—right inside the card & modal.</p>
+      </article>
+      <article class="card feature">
+        <div class="icon">🛡️</div>
+        <h3>Bias‑aware</h3>
+        <p>Toggle <strong>PII anonymization</strong> before scoring, and export audit‑friendly results.</p>
+      </article>
+    </div>
+  </section>
+
+  <!-- HOW IT WORKS -->
+  <section id="how" class="section container alt">
+    <h2 class="section-title">How it works</h2>
+    <ol class="steps reveal">
+      <li>
+        <span class="step-index">1</span>
+        <div>
+          <h4>Paste a Job Description</h4>
+          <p>Write or upload your JD and choose preprocessing options (stopwords, anonymization).</p>
+        </div>
+      </li>
+      <li>
+        <span class="step-index">2</span>
+        <div>
+          <h4>Upload resumes</h4>
+          <p>Add multiple candidates by upload or paste; peek any resume inline.</p>
+        </div>
+      </li>
+      <li>
+        <span class="step-index">3</span>
+        <div>
+          <h4>Rank & explain</h4>
+          <p>Click <em>Compute Match</em> to get ranked cards, progress bars, skills, and an <strong>Explain</strong> modal.</p>
+        </div>
+      </li>
+      <li>
+        <span class="step-index">4</span>
+        <div>
+          <h4>Export CSV</h4>
+          <p>Share shortlist and insights with your hiring panel, or refine and rerun.</p>
+        </div>
+      </li>
+    </ol>
+  </section>
+
+  <!-- ETHICS / TRUST -->
+  <section id="ethics" class="section container">
+    <h2 class="section-title">Designed for fairness & transparency</h2>
+    <div class="grid two reveal">
+      <div class="card">
+        <h3>Bias‑aware workflow</h3>
+        <p>Enable anonymization of names, emails, and numeric PII before scoring. Keep the focus on skills and experience.</p>
+      </div>
+      <div class="card">
+        <h3>Explainable output</h3>
+        <p>Each recommendation comes with a justification: contributing terms, matched skills, and gaps—so teams can trust the ranking.</p>
+      </div>
+    </div>
+    <div class="inline-actions mt">
+      <a class="btn primary" href="index.html">Open the dashboard</a>
+      <a class="btn ghost" href="signup.html">Create an account</a>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section id="faq" class="section container alt reveal">
+    <h2 class="section-title">Frequently asked questions</h2>
+    <details class="faq">
+      <summary>Does this run locally or require a server?</summary>
+      <p>The demo runs entirely in your browser. You can later connect to a Django/REST backend for enterprise use.</p>
+    </details>
+    <details class="faq">
+      <summary>How do you mitigate bias?</summary>
+      <p>We provide a PII anonymization option and transparency via explanations so reviewers can make fair, informed decisions.</p>
+    </details>
+    <details class="faq">
+      <summary>Can we export and share results?</summary>
+      <p>Yes — export CSV from the dashboard with ranks, scores, and skills.</p>
+    </details>
+  </section>
+
+  <footer class="site-footer container">
+    <p>© <span id="yr"></span> Screening Analyzer • Built for fair, explainable recruiting</p>
+    <div class="footer-links">
+      <a href="login.html">Login</a>
+      <a href="signup.html">Sign up</a>
+      <a href="index.html">Dashboard</a>
+    </div>
+  </footer>
+
+  <script src="anim.js"></script>
+  <script>
+    document.getElementById('yr').textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>

@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Forgot Password — Screening Analyzer</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body class="bg-animated">
+  <canvas id="bgParticles" class="bg-canvas" aria-hidden="true"></canvas>
+
+  <header class="site-header">
+    <a class="brand" href="home.html">
+      <span class="logo-badge">AI</span>
+      <span class="brand-text">Predicta</span>
+    </a>
+    <nav class="site-nav">
+      <a href="login.html" class="btn ghost">Back to login</a>
+    </nav>
+  </header>
+
+  <main class="auth-wrap container">
+    <section class="auth-card">
+      <h2>Forgot your password?</h2>
+      <p class="muted">Enter the email you used for sign‑up. We’ll create a reset link for this demo.</p>
+
+      <form id="forgotForm" class="auth-form">
+        <label class="field">
+          <span class="label">Email</span>
+          <input type="email" id="forgotEmail" required placeholder="you@company.com" />
+        </label>
+
+        <button class="btn primary" type="submit">Create reset link</button>
+      </form>
+
+      <div id="resetBox" class="card" style="display:none;margin-top:12px">
+        <h3>Reset link</h3>
+        <p class="muted small">For demo purposes the link is shown here instead of emailed.</p>
+        <p><a id="resetLink" class="btn ghost" href="#">Open reset page</a></p>
+      </div>
+    </section>
+
+    <aside class="auth-side">
+      <h3>Security note</h3>
+      <p class="muted">This prototype runs fully in your browser using <code>localStorage</code>.
+        In production, send a signed link via email and expire it server‑side.</p>
+    </aside>
+  </main>
+
+  <footer class="site-footer container">
+    <p>© <span id="yr"></span> Screening Analyzer</p>
+    <div class="footer-links">
+      <a href="home.html">Home</a>
+      <a href="login.html">Login</a>
+      <a href="signup.html">Sign up</a>
+    </div>
+  </footer>
+
+  <script src="auth.js"></script>
+  <script src="anim.js"></script>
+  <script>
+    document.getElementById('yr').textContent = new Date().getFullYear();
+
+    document.getElementById('forgotForm').addEventListener('submit', (e)=>{
+      e.preventDefault();
+      const email = document.getElementById('forgotEmail').value.trim();
+      try{
+        const token = Auth.startPasswordReset(email);      // generates + stores token
+        const url = new URL(window.location.origin + window.location.pathname);
+        // Build reset link using current folder path:
+        const base = window.location.href.replace(/[^/]+$/, 'reset.html');
+        const link = `${base}?token=${encodeURIComponent(token)}`;
+        const a = document.getElementById('resetLink');
+        a.href = link;
+        document.getElementById('resetBox').style.display = '';
+      }catch(err){
+        alert(err.message || 'Could not create reset link.');
+      }
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Reset Password — Screening Analyzer</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body class="bg-animated">
+  <canvas id="bgParticles" class="bg-canvas" aria-hidden="true"></canvas>
+
+  <header class="site-header">
+    <a class="brand" href="home.html">
+      <span class="logo-badge">AI</span>
+      <span class="brand-text">Predicta</span>
+    </a>
+    <nav class="site-nav">
+      <a href="login.html" class="btn ghost">Back to login</a>
+    </nav>
+  </header>
+
+  <main class="auth-wrap container">
+    <section class="auth-card">
+      <h2>Set a new password</h2>
+      <p id="emailHint" class="muted small"></p>
+
+      <form id="resetForm" class="auth-form" style="display:none">
+        <label class="field">
+          <span class="label">New password</span>
+          <input type="password" id="newPass" minlength="6" required placeholder="Min. 6 characters" />
+        </label>
+        <label class="field">
+          <span class="label">Confirm password</span>
+          <input type="password" id="confirmPass" minlength="6" required placeholder="Repeat password" />
+        </label>
+
+        <button class="btn primary" type="submit">Update password</button>
+      </form>
+
+      <div id="doneBox" class="card" style="display:none;margin-top:12px">
+        <h3>Password updated</h3>
+        <p class="muted">You can now log in with your new password.</p>
+        <p><a href="login.html" class="btn ghost">Go to login</a></p>
+      </div>
+    </section>
+
+    <aside class="auth-side">
+      <h3>Reset link validity</h3>
+      <p class="muted">Links expire after 20 minutes or after a successful reset.</p>
+    </aside>
+  </main>
+
+  <footer class="site-footer container">
+    <p>© <span id="yr"></span> Screening Analyzer</p>
+    <div class="footer-links">
+      <a href="home.html">Home</a>
+      <a href="login.html">Login</a>
+      <a href="signup.html">Sign up</a>
+    </div>
+  </footer>
+
+  <script src="auth.js"></script>
+  <script src="anim.js"></script>
+  <script>
+    document.getElementById('yr').textContent = new Date().getFullYear();
+
+    // Validate token and reveal form
+    const params = new URLSearchParams(location.search);
+    const token = params.get('token');
+    try{
+      const info = Auth.verifyResetToken(token); // { email }
+      document.getElementById('emailHint').textContent = `Resetting password for: ${info.email}`;
+      document.getElementById('resetForm').style.display = '';
+    }catch(err){
+      document.getElementById('emailHint').textContent = err.message || 'Invalid or expired link.';
+    }
+
+    document.getElementById('resetForm').addEventListener('submit', (e)=>{
+      e.preventDefault();
+      const p1 = document.getElementById('newPass').value;
+      const p2 = document.getElementById('confirmPass').value;
+      if(p1 !== p2){ alert('Passwords do not match.'); return; }
+      try{
+        Auth.completePasswordReset(token, p1);
+        document.getElementById('resetForm').style.display = 'none';
+        document.getElementById('doneBox').style.display = '';
+      }catch(err){
+        alert(err.message || 'Could not reset password.');
+      }
+    });
+  </script>
+</body>
+</html>

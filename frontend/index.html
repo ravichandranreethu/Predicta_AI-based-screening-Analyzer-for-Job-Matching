@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Dashboard — Screening Analyzer</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body class="bg-animated">
+  <!-- animated particles -->
+  <canvas id="bgParticles" class="bg-canvas" aria-hidden="true"></canvas>
+
+  <!-- Shared header -->
+  <header class="site-header">
+    <a class="brand" href="home.html">
+      <span class="logo-badge">AI</span>
+      <span class="brand-text">Predicta</span>
+    </a>
+    <nav class="site-nav">
+      <span id="greeter" class="badge" style="opacity:.85"></span>
+      <button id="logoutBtn" class="btn ghost">Logout</button>
+    </nav>
+  </header>
+
+  <!-- DASHBOARD CONTENT -->
+  <main class="container">
+    <!-- Job Description -->
+    <section class="panel">
+      <h2 class="panel-title">1) Job Description</h2>
+      <div class="grid two">
+        <div>
+          <label class="field">
+            <span class="label">Paste the Job Description</span>
+            <textarea id="jdInput" rows="10" placeholder="Paste or type a job description here..."></textarea>
+          </label>
+          <div class="inline-actions">
+            <button id="loadSampleJd" class="btn ghost">Load Sample JD</button>
+            <label class="switch">
+              <input id="stopwordsToggle" type="checkbox" checked />
+              <span>Remove stopwords</span>
+            </label>
+          </div>
+        </div>
+        <aside class="help">
+          <h3>Tips</h3>
+          <ul>
+            <li>Keep JD specific (skills, frameworks, responsibilities).</li>
+            <li>Use the Stopwords toggle to reduce noise.</li>
+            <li>Privacy: Everything runs in your browser.</li>
+          </ul>
+        </aside>
+      </div>
+    </section>
+
+
+    <!-- 🔵 LinkedIn External Job Search (FR7.3) -->
+<section class="box" style="margin-top: 30px;">
+  <h2>🔍 External Job Search (LinkedIn Mock API)</h2>
+
+  <div class="kv" style="gap:20px;display:flex;flex-wrap:wrap">
+    <input id="linkedin-q" type="text" placeholder="Keyword (e.g., Python Developer)" />
+    <input id="linkedin-location" type="text" placeholder="Location (e.g., Remote)" />
+    <input id="linkedin-limit" type="number" min="1" max="10" value="5" />
+    <button id="linkedin-search-btn" class="btn">Search</button>
+  </div>
+
+  <div id="linkedin-results" style="margin-top: 20px;">
+      <!-- Results will be inserted here -->
+  </div>
+</section>
+
+
+    <!-- Candidates -->
+    <section class="panel">
+      <h2 class="panel-title">2) Candidates (Resumes)</h2>
+      <div class="grid two">
+        <div>
+          <div class="uploader">
+            <input id="resumeFile" type="file" accept=".txt,.pdf,.doc,.docx" multiple />
+            <div id="dropZone" class="dropzone" tabindex="0">
+              <strong>Drag & drop</strong> resumes here, or <strong>paste</strong> text.
+            </div>
+            <p class="muted">
+              Upload <strong>.txt</strong>, <strong>.pdf</strong>, or <strong>.doc/.docx</strong> resumes,
+              or paste text below. (Google Docs: download as Word or PDF before uploading.)
+            </p>
+            <p id="uploadStatus" class="muted small"></p>
+            
+            <p class="muted">
+                Upload <strong>.txt</strong>, <strong>.pdf</strong>, or <strong>.doc/.docx</strong> resumes,
+                or paste text below. (Google Docs: download as Word or PDF before uploading.)
+                <p id="uploadStatus" class="muted small"></p> <!-- status line -->
+              </p>
+              
+          </div>
+
+          <div class="candidate-form">
+            <div class="grid two">
+              <label class="field">
+                <span class="label">Candidate Name</span>
+                <input id="candName" type="text" placeholder="e.g., Alex Johnson" />
+              </label>
+              <label class="field">
+                <span class="label">Email (optional)</span>
+                <input id="candEmail" type="email" placeholder="e.g., alex@email.com" />
+              </label>
+            </div>
+            <label class="field">
+              <span class="label">Resume Text</span>
+              <textarea id="candResume" rows="8" placeholder="Paste resume text…"></textarea>
+            </label>
+            <div class="inline-actions">
+              <button id="addCandidateBtn" class="btn">Add Candidate</button>
+              <button id="loadSampleCandidates" class="btn ghost">Load 3 Sample Resumes</button>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <h3 class="subheading">Current Candidates</h3>
+          <ul id="candidateList" class="list"></ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- Rank & Explain -->
+    <section class="panel">
+      <h2 class="panel-title">3) Rank & Explain</h2>
+      <div class="inline-actions">
+        <button id="rankBtn" class="btn primary">Compute Match Scores</button>
+        <label class="switch">
+          <input id="fairToggle" type="checkbox" checked />
+          <span>Anonymize PII before scoring</span>
+        </label>
+        <label class="switch">
+          <input id="sbertToggle" type="checkbox" />
+          <span>Use Sentence-BERT (if available)</span>
+        </label>
+        
+        <button id="exportCsvBtn" class="btn ghost">Export CSV</button>
+        <button id="retrainBtn" class="btn ghost">
+          Retrain ML Model (FR4.3)
+        </button>
+        <button id="resetBtn" class="btn danger">Reset</button>
+        <button id="viewAuditBtn" class="btn ghost">View audit log</button>
+      </div>
+      <div id="results" class="results"></div>
+    </section>
+
+    <section class="panel light">
+      <div class="footnote">
+        <strong>Note:</strong> This prototype ranks with TF-IDF cosine in-browser and demonstrates fairness (PII toggle) and explainability (term weights & skill overlap). Swap in your backend embeddings later.
+      </div>
+      <div id="fairnessSummary" class="help" style="margin-top:10px"></div>
+    </section>
+
+    <section class="panel light" id="analyticsPanel">
+      <header class="panel-header">
+        <div>
+          <h2>Recruiter Analytics</h2>
+          <p class="muted small">
+            Quick summary of your usage: jobs created, ranking runs, exports, and logins
+            for the last 30 days.
+          </p>
+        </div>
+        <button id="refreshAnalyticsBtn" class="btn ghost small">Refresh</button>
+      </header>
+
+      <div class="grid three analytics-cards">
+        <article class="metric-card">
+          <h3>Total Jobs</h3>
+          <p class="metric-value" id="metricJobs">—</p>
+        </article>
+        <article class="metric-card">
+          <h3>Ranking Runs</h3>
+          <p class="metric-value" id="metricRuns">—</p>
+        </article>
+        <article class="metric-card">
+          <h3>CSV Exports</h3>
+          <p class="metric-value" id="metricExports">—</p>
+        </article>
+        <article class="metric-card">
+          <h3>Logins</h3>
+          <p class="metric-value" id="metricLogins">—</p>
+        </article>
+      </div>
+
+      <div class="analytics-chart-wrapper">
+        <h3 class="small-heading">Activity (last 30 days)</h3>
+        <canvas id="analyticsChart" height="120"></canvas>
+      </div>
+    </section>
+    
+  </main>
+
+    
+  </main>
+
+  <!-- Explainability Modal -->
+  <dialog id="explainModal">
+
+    <form method="dialog" class="modal">
+      <header class="modal-header">
+        <h3 id="modalTitle">Explanation</h3>
+        <button class="icon-btn" value="cancel" aria-label="Close">✕</button>
+      </header>
+      <div id="modalBody" class="modal-body"></div>
+      <footer class="modal-footer">
+        <button class="btn" value="cancel">Close</button>
+      </footer>
+    </form>
+  </dialog>
+
+   <!-- Resume Editor Modal -->
+<dialog id="editorModal">
+  <form method="dialog" id="editorForm" class="modal">
+    <header class="modal-header">
+      <h3>Edit Candidate</h3>
+      <button class="icon-btn" value="cancel" aria-label="Close">✕</button>
+    </header>
+
+    <div class="modal-body">
+      <label class="field">
+        <span class="label">Name</span>
+        <input id="editorName" type="text" />
+      </label>
+      <label class="field">
+        <span class="label">Email</span>
+        <input id="editorEmail" type="email" />
+      </label>
+      <label class="field">
+        <span class="label">Resume Text</span>
+        <textarea id="editorText" rows="20" placeholder="Edit resume text…"></textarea>
+      </label>
+    </div>
+
+    <footer class="modal-footer">
+      <button class="btn ghost" value="cancel">Cancel</button>
+      <button class="btn primary" id="editorSaveBtn">Save changes</button>
+    </footer>
+  </form>
+</dialog>
+
+  <!-- Shared footer -->
+  <footer class="site-footer container">
+    <p>© <span id="yr"></span> Screening Analyzer</p>
+    <div class="footer-links">
+      <a href="home.html">Home</a>
+      <a href="login.html">Login</a>
+      <a href="signup.html">Sign up</a>
+    </div>
+  </footer>
+
+  <!-- Scripts: order matters -->
+  <!-- Word .docx parser -->
+<script src="https://unpkg.com/mammoth/mammoth.browser.min.js"></script>
+
+<!-- PDF parser (pdf.js) -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script>
+  // point the worker to the same CDN version
+  pdfjsLib.GlobalWorkerOptions.workerSrc = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
+</script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="auth.js"></script>
+  <script src="anim.js"></script>
+  <script src="app.js"></script>
+  <script>
+    // Require login
+    if (!Auth.isLoggedIn()) location.href = "login.html";
+
+    // Greet + logout
+    const s = Auth.getSession();
+    const greeter = document.getElementById('greeter');
+    if (greeter && s) greeter.textContent = `Hi, ${s.name || s.email}`;
+    document.getElementById('logoutBtn').onclick = () => { Auth.logout(); location.href = "login.html"; };
+
+    // Footer year
+    document.getElementById('yr').textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>

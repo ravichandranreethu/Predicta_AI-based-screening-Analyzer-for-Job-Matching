@@ -1,0 +1,6 @@
+fastapi==0.115.0
+uvicorn[standard]==0.30.6
+sentence-transformers==3.0.1
+numpy==1.26.4
+pymongo>=4.6.0
+xgboost==2.1.0

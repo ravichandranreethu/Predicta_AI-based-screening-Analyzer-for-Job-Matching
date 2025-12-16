@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Login — Screening Analyzer</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body class="bg-animated">
+  <canvas id="bgParticles" class="bg-canvas" aria-hidden="true"></canvas>
+
+  <!-- Shared header (same as home) -->
+  <header class="site-header">
+    <a class="brand" href="home.html">
+      <span class="logo-badge">AI</span>
+      <span class="brand-text">Predicta</span>
+    </a>
+    <nav class="site-nav">
+      <a href="home.html#features">Features</a>
+      <a href="home.html#how">How it works</a>
+      <a href="home.html#ethics">Fairness</a>
+      <a href="signup.html" class="btn ghost">Sign up</a>
+    </nav>
+  </header>
+
+  <main class="auth-wrap container">
+    <section class="auth-card">
+      <h2>Welcome back</h2>
+      <p class="muted">Sign in to access the recruiter dashboard.</p>
+
+      <form id="loginForm" class="auth-form">
+        <label class="field">
+          <span class="label">Email</span>
+          <input type="email" id="loginEmail" required placeholder="you@company.com" />
+        </label>
+        <label class="field">
+          <span class="label">Password</span>
+          <input type="password" id="loginPassword" minlength="6" required placeholder="••••••••" />
+        </label>
+
+        <button class="btn primary" type="submit">Login</button>
+        <p class="muted small">
+            No account? <a href="signup.html">Create one</a> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <a href="forgot.html">Forgot password?</a>
+          </p>
+          
+      </form>
+    </section>
+
+    <aside class="auth-side">
+      <h3>Why log in?</h3>
+      <ul>
+        <li>Secure your uploads & sessions</li>
+        <li>Save/export ranked results</li>
+        <li>Explainable, bias‑aware flow</li>
+      </ul>
+    </aside>
+  </main>
+
+  <footer class="site-footer container">
+    <p>© <span id="yr"></span> Screening Analyzer</p>
+    <div class="footer-links">
+      <a href="home.html">Home</a>
+      <a href="signup.html">Sign up</a>
+      <a href="index.html">Dashboard</a>
+    </div>
+  </footer>
+
+  <script src="auth.js"></script>
+  <script src="anim.js"></script>
+  <script>
+    document.getElementById('yr').textContent = new Date().getFullYear();
+    if (Auth.isLoggedIn()) location.href = "index.html";
+    document.querySelector("#loginForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const email = document.querySelector("#loginEmail").value.trim();
+      const password = document.querySelector("#loginPassword").value;
+      try {
+        await Auth.login(email, password);
+        location.href = "index.html";
+      } catch (err) { alert(err.message || "Login failed"); }
+    });
+  </script>
+</body>
+</html>
